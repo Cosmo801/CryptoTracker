@@ -1,0 +1,143 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mvvm="clr-namespace:CryptoTracker.WPF.MVVM"
+             xmlns:local="clr-namespace:CryptoTracker.WPF.Markets"
+             xmlns:data="clr-namespace:CryptoTracker.Data.Request;assembly=CryptoTracker.Data"
+             xmlns:Request="clr-namespace:CryptoTracker.Data.Request;assembly=CryptoTracker.Data" x:Class="CryptoTracker.WPF.Markets.FilterCryptoView"
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="1000">
+
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type local:FilterCryptoViewModel}">
+            <local:FilterCryptoView/>
+        </DataTemplate>
+
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+
+        <Border Grid.Row="0" BorderBrush="Black" BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="0.5*"/>
+            </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" BorderBrush="Black" BorderThickness="1">
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width=".3*"/>
+                                    <ColumnDefinition Width=".7*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Border Grid.Column="0" BorderBrush="Black" BorderThickness="1">
+                                    <Grid Background="LightGray">
+                                        <Label Content="Filter Property" HorizontalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
+                                <Border Grid.Column="1" BorderBrush="Black" BorderThickness="1">
+                                    <Grid Background="LightGray">
+                                        <ComboBox ItemsSource="{Binding Source={mvvm:EnumBindingSource {x:Type data:RequestPropertyType}}, Mode=OneWay}" SelectedItem="{Binding CurrentRequestPropertyType}"/>
+                                    </Grid>
+                                </Border>
+
+
+                            </Grid>
+                        </Border>
+                        <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width=".3*"/>
+                                    <ColumnDefinition Width=".7*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Border Grid.Column="0" BorderBrush="Black" BorderThickness="1">
+                                    <Grid Background="LightGray">
+                                        <Label Content="Type" HorizontalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
+                                <Border Grid.Column="1" BorderBrush="Black" BorderThickness="1">
+                                    <Grid Background="LightGray">
+                                        <ComboBox ItemsSource="{Binding Source={mvvm:EnumBindingSource {x:Type data:RequestFilterType}}, Mode=OneWay}" SelectedItem="{Binding CurrentRequestFilterType}" />
+                                    </Grid>
+                                </Border>
+
+
+                            </Grid>
+                        </Border>
+                        <Border Grid.Row="3" BorderBrush="Black" BorderThickness="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width=".3*"/>
+                                    <ColumnDefinition Width=".7*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Border Grid.Column="0" BorderBrush="Black" BorderThickness="1">
+                                    <Grid Background="LightGray">
+                                        <Label Content="Value" HorizontalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
+                                <Border Grid.Column="1" BorderBrush="Black" BorderThickness="1">
+                                    <Grid Background="LightGray">
+                                        <TextBox Text="{Binding CurrentRequestValue}"/>
+                                    </Grid>
+                                </Border>
+
+
+                            </Grid>
+                        </Border>
+
+                        <Button Grid.Row="5" Command="{Binding AddFilterCommand}" Width="50" Content="Add"></Button>
+
+                    </Grid>
+                </Border>
+                <Border Grid.Column="1" BorderBrush="Black" BorderThickness="1">
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="0.7*"/>
+                            <RowDefinition Height="0.3*"/>
+                        </Grid.RowDefinitions>
+
+                        <ListBox SelectedItem="{Binding SelectedFilterString}" ItemsSource="{Binding FilterList, Mode=OneWay}">
+                        </ListBox>
+
+                        <Grid Grid.Row="1">
+                            <Grid.RowDefinitions>
+                                
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Height="60" HorizontalAlignment="Center" Orientation="Horizontal">
+                                <Button Width="100" Command="{Binding RemoveFilterCommand}" Content="Remove"/>
+                                <Button Width="100" Command="{Binding ApplyFiltersCommand}" Content="Apply"/>
+                            </StackPanel>
+                            
+                        </Grid>
+                        
+                        
+                    </Grid>
+                </Border>
+           
+        </Grid>
+        </Border>
+
+    </Grid>
+</UserControl>

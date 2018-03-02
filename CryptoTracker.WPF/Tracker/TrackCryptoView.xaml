@@ -1,0 +1,85 @@
+﻿<UserControl x:Class="CryptoTracker.WPF.Tracker.TrackCryptoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CryptoTracker.WPF.Tracker"
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="1000">
+
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type local:TrackCryptoViewModel}">
+            <local:TrackCryptoView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type local:AddToTrackerViewModel}">
+            <local:AddToTrackerView/>
+        </DataTemplate>
+
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height=".6*"/>
+                <RowDefinition Height="0.3*"/>
+            </Grid.RowDefinitions>
+
+
+            <Grid Grid.Row="0">
+                <Grid>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Width="100" Content="Add Crypto" Command="{Binding OpenEditTrackerCommand}"/>
+                        <Button Width="100" Content="Remove Crypto" Command="{Binding RemoveCryptoCommand}"/>
+                        <Button Width="100" Content="Help"/>
+                    </StackPanel>
+
+
+                </Grid>
+               
+            </Grid>
+            
+            <Grid Grid.Row="1">
+                <DataGrid Visibility="{Binding LoadCryptoTask.IsCompleted, Converter={StaticResource BooleanToVisibilityConverter}}" AlternatingRowBackground="Gainsboro"  AlternationCount="2" ItemsSource="{Binding ObservableCrypto}" 
+                      AutoGenerateColumns="True" HorizontalAlignment="Stretch" SelectedItem="{Binding SelectedObservableCrypto}"   
+                      HorizontalContentAlignment="Stretch" ColumnWidth="*" CanUserResizeColumns="False" CanUserResizeRows="False">
+
+
+
+
+
+                </DataGrid>
+            </Grid>
+
+
+            <Grid Grid.Row="2">
+                <StackPanel>
+                    <TextBlock Text="{Binding SelectedCryptoModel.Symbol}"/>
+                    <ListView ItemsSource="{Binding ObservableSelectedTracker}"/>
+                    <Button Width="70" Content="Remove" HorizontalAlignment="Left"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+        <Grid Background="White" Visibility="{Binding EditTrackerOpen, Converter={StaticResource BooleanToVisibilityConverter}}" Opacity=".95">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Width="25" fa:Awesome.Content="Close" Command="{Binding CloseEditTrackerCommand}"/>
+            </StackPanel>
+            
+            <ContentControl Grid.Row="1" Content="{Binding EditTrackerViewModel}"/>
+        </Grid>
+
+    </Grid>
+    
+    
+    
+    
+</UserControl>

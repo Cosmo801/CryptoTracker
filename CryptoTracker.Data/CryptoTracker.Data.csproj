@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9E58E270-EC31-4788-BED2-FA7555AE1C7A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CryptoTracker.Data</RootNamespace>
+    <AssemblyName>CryptoTracker.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Linq.Dynamic, Version=1.0.6132.35681, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Linq.Dynamic.1.0.7\lib\net40\System.Linq.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DTOs\CoinMarketCap\CMCErrorResponse.cs" />
+    <Compile Include="DTOs\CoinMarketCap\CMCAllCoinResponse.cs" />
+    <Compile Include="DTOs\CoinMarketCap\CMCSingleCoinResponse.cs" />
+    <Compile Include="DTOs\CryptoCompare\CCFullSingleCoinResponse.cs" />
+    <Compile Include="Models\AdvancedCryptoModel.cs" />
+    <Compile Include="Models\Tracker\CryptoDataModel.cs" />
+    <Compile Include="Models\Tracker\SerializedCryptoModel.cs" />
+    <Compile Include="Errors\CryptoServiceException.cs" />
+    <Compile Include="Helpers\ClientHelper.cs" />
+    <Compile Include="Helpers\ContinuousTaskFactory.cs" />
+    <Compile Include="Helpers\CryptoModelConverter.cs" />
+    <Compile Include="Models\BasicCryptoModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Request\CryptoRequestParameters.cs" />
+    <Compile Include="Request\CryptoRequestService.cs" />
+    <Compile Include="Request\RequestFilterType.cs" />
+    <Compile Include="Request\RequestPropertyType.cs" />
+    <Compile Include="Services\CoinMarketCap\CoinMarketCapService.cs" />
+    <Compile Include="Services\CoinMarketCap\ICoinMarketCapService.cs" />
+    <Compile Include="Services\CryptoCompare\CryptoCompareService.cs" />
+    <Compile Include="Services\CryptoCompare\ICryptoCompareService.cs" />
+    <Compile Include="Services\Tracker\Data\ConditionMetEventArgs.cs" />
+    <Compile Include="Services\Tracker\Data\CryptoLoaderEventArgs.cs" />
+    <Compile Include="Services\Tracker\DebugTrackerService.cs" />
+    <Compile Include="Services\Tracker\ITrackerLoaderService.cs" />
+    <Compile Include="Services\Tracker\ITrackerService.cs" />
+    <Compile Include="Services\Tracker\TrackerFileLoaderService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
