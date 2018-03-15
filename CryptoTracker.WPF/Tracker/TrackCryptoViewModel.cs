@@ -19,19 +19,35 @@ namespace CryptoTracker.WPF.Tracker
     {
         #region Initialization
 
-        public TrackCryptoViewModel()
+        public TrackCryptoViewModel(ITrackerLoader trackerLoader, ITrackerPriceService trackerPriceService)
         {
-            _trackerService = new DebugTrackerService();
+            _trackerLoader = trackerLoader;
+            _trackerPriceService = trackerPriceService;
 
             EditTrackerViewModel = ContainerHelper.Container.Resolve<AddToTrackerViewModel>();
             EditTrackerOpen = false;
 
             EditTrackerViewModel.AppliedToTracker += EditTrackerViewModel_AppliedToTracker;
-            _trackerService.ConditionMet += _trackerService_ConditionMet;
+
+            _trackerPriceService.ConditionMet += TrackerConditionMet;
+            _trackerPriceService.TaskComplete += TrackerDataUpdated;
+
+            _trackerPriceService.StartTracker();
 
             InitializeCommands();
             LoadData();
 
+        }
+
+        private async void TrackerDataUpdated(object arg1, EventArgs arg2)
+        {
+            LoadData();
+        }
+
+        private void TrackerConditionMet(object arg1, ConditionMetEventArgs arg2)
+        {
+            if (TrackerViewModelConditionMet == null) return;
+            TrackerViewModelConditionMet(this, arg2);
         }
 
         public override void InitializeCommands()
@@ -45,9 +61,15 @@ namespace CryptoTracker.WPF.Tracker
         {
             try
             {
-                LoadCryptoTask = new TaskWatcher<List<CryptoDataModel>>(_trackerService.LoadCryptoDataModels());
-
+                LoadCryptoTask = new TaskWatcher<List<CryptoDataModel>>(_trackerPriceService.GetTrackedCrypto());
+   
                 LoadCryptoTask.PropertyChanged += LoadCryptoCompleted;
+
+                if (LoadCryptoTask.IsCompleted) LoadCryptoTask.RaisePropertyChanged(this, "Result");
+
+
+
+
             }
             catch (CryptoServiceException ex)
             {
@@ -65,7 +87,6 @@ namespace CryptoTracker.WPF.Tracker
             if (e.PropertyName == "Result")
             {
                 CryptoDataList = LoadCryptoTask.Result;
-
             }
 
             else
@@ -75,7 +96,8 @@ namespace CryptoTracker.WPF.Tracker
         }
 
         public TaskWatcher<List<CryptoDataModel>> LoadCryptoTask { get; private set; }
-        private DebugTrackerService _trackerService;
+        private ITrackerLoader _trackerLoader;
+        private ITrackerPriceService _trackerPriceService;
 
         public AddToTrackerViewModel EditTrackerViewModel
         {
@@ -115,7 +137,6 @@ namespace CryptoTracker.WPF.Tracker
             set
             {
                 _observableCrypto = value;
-                RemoveCryptoCommand.RaiseCanExecuteChanged();
                 RaisePropertyChanged();
             }
         }
@@ -169,8 +190,8 @@ namespace CryptoTracker.WPF.Tracker
         private async void OnRemoveCrypto()
         {
             var cryptoForRemove = CryptoDataList.Single(c => c.Data.Symbol == SelectedObservableCrypto.Symbol);
-            await _trackerService.RemoveCrypto(cryptoForRemove);
-            await _trackerService.SaveChanges();
+            await _trackerLoader.RemoveCrypto(cryptoForRemove);
+            await _trackerLoader.SaveChanges();
             ObservableSelectedTracker = null;
 
             LoadData();
@@ -183,8 +204,8 @@ namespace CryptoTracker.WPF.Tracker
             switch (arg2.IsAdd)
             {
                 case true:
-                    await _trackerService.AddCrypto(arg2.Crypto);
-                    await _trackerService.SaveChanges();
+                    _trackerLoader.AddCrypto(arg2.Crypto);
+                    await _trackerLoader.SaveChanges();
                     break;
                 case false:
                     //

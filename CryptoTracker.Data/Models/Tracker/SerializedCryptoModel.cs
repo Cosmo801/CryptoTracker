@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace CryptoTracker.Data.Models.Tracker
 {
+
     public class SerializedCryptoModel
     {
         public string Symbol { get; set; }

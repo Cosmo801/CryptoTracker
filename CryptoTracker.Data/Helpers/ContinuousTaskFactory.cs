@@ -7,9 +7,10 @@ namespace CryptoTracker.Data.Helpers
     public class ContinuousTaskFactory
     {
         /// <summary>
-        /// A task is passed in that needs to continuously operate. The callback action is used to process results
+        /// A task is passed in that needs to continuously operate.
         /// </summary>
-
+        /// 
+        //Rework this
         public ContinuousTaskFactory()
         {
             Initialize();
@@ -27,64 +28,57 @@ namespace CryptoTracker.Data.Helpers
             IsRunning = false;
         }
 
-        public void CreateTask(Func<Task> task, int delay, Action callback)
+        public async Task CreateTask(Action task, int delay, Action callback)
         {
+            if (IsRunning) return;
 
             try
             {
-                Task.Factory.StartNew(async () =>
+                while (true)
                 {
-                    OnTaskRunning(true);
-
-                    while (true)
-                    {
-                        if (_cancellationToken.IsCancellationRequested)
-                        {
-                            _cancellationToken.ThrowIfCancellationRequested();
-                        }
-                        await Task.Run(task).ConfigureAwait(false);
-                        await Task.Run(callback).ConfigureAwait(false);
-                        await Task.Delay(delay).ConfigureAwait(false);
-                    }
+                    if (_cancellationToken.IsCancellationRequested) _cancellationToken.ThrowIfCancellationRequested();
 
 
+                    var primaryTask = Task.Run(task);
+                    var callbackTask = Task.Run(callback);
 
-                }, _cancellationToken);
+                    await Task.Delay(delay).ConfigureAwait(false);
+                    await primaryTask.ConfigureAwait(false);
+                    await callbackTask.ConfigureAwait(false);
 
+                    OnTaskComplete();
+
+                    
+
+                }
             }
             catch (OperationCanceledException)
+            {
+
+                Initialize();
+                return;
+            }
+
+            catch (Exception)
             {
                 Initialize();
                 return;
             }
 
 
-            catch (Exception)
-            {
 
-                throw;
-            }
+
+
+            
         }
 
-        public Action<object, EventArgs> TaskStarted;
-        public Action<object, EventArgs> TaskEnded;
-
-        protected void OnTaskRunning(bool state)
+        private void OnTaskComplete()
         {
-            if (state == true)
-            {
-                IsRunning = true;
-                if (TaskStarted == null) return;
-                TaskStarted(this, new EventArgs());
-            }
-
-            if (state == false)
-            {
-                IsRunning = false;
-                if (TaskEnded == null) return; 
-                TaskEnded(this, new EventArgs());
-            }
+            TaskCompleted(this, new EventArgs());
         }
+
+        public event Action<object, EventArgs> TaskCompleted;
+
         public bool IsRunning { get; private set; }
 
         protected CancellationTokenSource _cancellationTokenSource;
@@ -103,58 +97,11 @@ namespace CryptoTracker.Data.Helpers
 
     }
 
-
-
-    public class ContinuousTaskFactory<TResult> : ContinuousTaskFactory
-    {
-        public ContinuousTaskFactory()
-            :base()
-        {
-           
-        }
-
-        public void CreateTask(Func<Task<TResult>> task, int delay, Action callback)
-        {
-            try
-            {
-                Task.Factory.StartNew(async () =>
-                {
-                    OnTaskRunning(true);
-
-                    while (true)
-                    {
-                        if (_cancellationToken.IsCancellationRequested)
-                        {
-                            _cancellationToken.ThrowIfCancellationRequested();
-                        }
-                        await Task.Run(task).ConfigureAwait(false);
-                        await Task.Run(callback).ConfigureAwait(false);
-                        await Task.Delay(delay).ConfigureAwait(false);
-                    }
+   
 
 
 
-                }, _cancellationToken);
-
-            }
-            catch (OperationCanceledException)
-            {
-                Initialize();
-                return;
-            }
-
-
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }  
-
-
-     
-    }
-
+   
 
 
 

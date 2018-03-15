@@ -68,11 +68,10 @@
     <Compile Include="Services\CryptoCompare\CryptoCompareService.cs" />
     <Compile Include="Services\CryptoCompare\ICryptoCompareService.cs" />
     <Compile Include="Services\Tracker\Data\ConditionMetEventArgs.cs" />
-    <Compile Include="Services\Tracker\Data\CryptoLoaderEventArgs.cs" />
-    <Compile Include="Services\Tracker\DebugTrackerService.cs" />
-    <Compile Include="Services\Tracker\ITrackerLoaderService.cs" />
-    <Compile Include="Services\Tracker\ITrackerService.cs" />
-    <Compile Include="Services\Tracker\TrackerFileLoaderService.cs" />
+    <Compile Include="Services\Tracker\ITrackerLoader.cs" />
+    <Compile Include="Services\Tracker\TrackerFileLoader.cs" />
+    <Compile Include="Services\Tracker\ITrackerPriceService.cs" />
+    <Compile Include="Services\Tracker\TrackerPriceService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

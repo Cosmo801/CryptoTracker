@@ -1,5 +1,6 @@
 ﻿using CryptoTracker.Data.Services.CoinMarketCap;
 using CryptoTracker.Data.Services.CryptoCompare;
+using CryptoTracker.Data.Services.Tracker;
 using Unity;
 using Unity.Lifetime;
 
@@ -19,6 +20,8 @@ namespace CryptoTracker.WPF.MVVM
             _container = new UnityContainer();
             _container.RegisterType<ICoinMarketCapService, CoinMarketCapService>(new ContainerControlledLifetimeManager());
             _container.RegisterType<ICryptoCompareService, CryptoCompareService>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<ITrackerLoader, TrackerFileLoader>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<ITrackerPriceService, TrackerPriceService>(new ContainerControlledLifetimeManager());
 
         }
 
