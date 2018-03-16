@@ -60,9 +60,7 @@ namespace CryptoTracker.WPF.Markets
         }
         private bool CanAddFilter()
         {
-            if (!IsPropertySet("CurrentRequestFilterType")) return false;
-            if (!IsPropertySet("CurrentRequestPropertyType")) return false;
-
+            if (CurrentRequestValue == 0) return false;
             return true;
         }
 
@@ -129,7 +127,6 @@ namespace CryptoTracker.WPF.Markets
             {
                 _currentRequestPropertyType = value;
                 RaisePropertyChanged();
-                if (CanAddFilter()) AddFilterCommand.RaiseCanExecuteChanged();
 
             }
         }
@@ -145,7 +142,6 @@ namespace CryptoTracker.WPF.Markets
             {
                 _currentRequestFilterType = value;
                 RaisePropertyChanged();
-                if (CanAddFilter()) AddFilterCommand.RaiseCanExecuteChanged();
             }
         }
         private RequestFilterType _currentRequestFilterType;

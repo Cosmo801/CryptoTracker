@@ -50,6 +50,7 @@
     <Compile Include="DTOs\CoinMarketCap\CMCAllCoinResponse.cs" />
     <Compile Include="DTOs\CoinMarketCap\CMCSingleCoinResponse.cs" />
     <Compile Include="DTOs\CryptoCompare\CCFullSingleCoinResponse.cs" />
+    <Compile Include="Helpers\DecimalHelpers.cs" />
     <Compile Include="Models\AdvancedCryptoModel.cs" />
     <Compile Include="Models\Tracker\CryptoDataModel.cs" />
     <Compile Include="Models\Tracker\SerializedCryptoModel.cs" />

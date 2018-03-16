@@ -28,6 +28,7 @@ namespace CryptoTracker.WPF.Tracker
             EditTrackerOpen = false;
 
             EditTrackerViewModel.AppliedToTracker += EditTrackerViewModel_AppliedToTracker;
+            //EditTrackerViewModel.AppliedToTracker += EditTrackerViewModel_AppliedToTracker;
 
             _trackerPriceService.ConditionMet += TrackerConditionMet;
             _trackerPriceService.TaskComplete += TrackerDataUpdated;
@@ -39,7 +40,9 @@ namespace CryptoTracker.WPF.Tracker
 
         }
 
-        private async void TrackerDataUpdated(object arg1, EventArgs arg2)
+       
+
+        private void TrackerDataUpdated(object arg1, EventArgs arg2)
         {
             LoadData();
         }
@@ -215,7 +218,7 @@ namespace CryptoTracker.WPF.Tracker
 
             }
 
-            LoadData();
+            EditTrackerOpen = false;
 
         }
 

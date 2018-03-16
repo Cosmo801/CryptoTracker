@@ -85,10 +85,7 @@ namespace CryptoTracker.WPF.Tracker
 
         private bool CanAddFilter()
         {
-
-            if (!IsPropertySet("CurrentRequestProperty")) return false;
-            if (!IsPropertySet("CurrentRequestFilterType")) return false;
-
+            if (CurrentRequestValue == 0) return false;
             return true;
         }
 
@@ -139,8 +136,6 @@ namespace CryptoTracker.WPF.Tracker
                 _currentRequestProperty = value;
                 RaisePropertyChanged();
 
-                if (CanAddFilter()) AddFilterCommand.RaiseCanExecuteChanged();
-
             }
         }
         private RequestPropertyType _currentRequestProperty;
@@ -156,8 +151,6 @@ namespace CryptoTracker.WPF.Tracker
             {
                 _currentRequestFilterType = value;
                 RaisePropertyChanged();
-
-                if (CanAddFilter()) AddFilterCommand.RaiseCanExecuteChanged();
 
             }
         }
@@ -175,6 +168,8 @@ namespace CryptoTracker.WPF.Tracker
             {
                 _currentRequestValue = value;
                 RaisePropertyChanged();
+
+                AddFilterCommand.RaiseCanExecuteChanged();
 
             }
         }
@@ -236,10 +231,13 @@ namespace CryptoTracker.WPF.Tracker
 
             AppliedToTracker(this, new ApplyToTrackerEventArgs(cryptoDataModel, true));
 
+            //AppliedToTracker(this, new EventArgs());
+
         }
 
         public RelayCommand RemoveFilterCommand { get; private set; }
         public event Action<object, ApplyToTrackerEventArgs> AppliedToTracker;
+        //public event Action<object, EventArgs> AppliedToTracker;
 
         public BasicCryptoModel SelectedCrypto
         {
