@@ -33,7 +33,16 @@ namespace CryptoTracker.WPF
 
         private void minimizeBtn_Click(object sender, RoutedEventArgs e)
         {
-            
+            WindowState = WindowState.Minimized;
+        }
+
+        private void maximizeBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (WindowState == WindowState.Normal) WindowState = WindowState.Maximized;
+            else
+            {
+                WindowState = WindowState.Normal;
+            }
         }
     }
 }

@@ -26,7 +26,7 @@ namespace CryptoTracker.WPF.Markets
             FilterCryptoViewModel.FiltersApplied += FilterCryptoViewModel_FiltersApplied;
 
             InitializeCommands();
-            LoadData();
+            LoadAsyncData();
         }
 
         public override void InitializeCommands()
@@ -36,34 +36,36 @@ namespace CryptoTracker.WPF.Markets
             ToggleFiltersCommand = new RelayCommand<string>(OnToggleFilters);
         }
 
-        public override void LoadData()
+        public override void LoadAsyncData()
         {
-            try
-            {
-                AllCoinsTask = new TaskWatcher<List<BasicCryptoModel>>(_coinMarketCapService.GetAllCoins());
-                AllCoinsTask.PropertyChanged += AllCoinsTask_PropertyChanged;
-            }
-            catch (CryptoServiceException ex)
-            {
-                RaiseErrorOccured(ex.Message);
-            }
+            
+            AllCoinsTask = new TaskWatcher<List<BasicCryptoModel>>(_coinMarketCapService.GetAllCoins());
+            AllCoinsTask.PropertyChanged += AllCoinsTask_PropertyChanged;
+            
 
         }
 
-        private void AllCoinsTask_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private async void AllCoinsTask_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if(e.PropertyName == "Result")
             {
                 CoinList = new ObservableCollection<BasicCryptoModel>(AllCoinsTask.Result);
                 FilteredCoinList = CoinList;
-                
 
+
+                await Task.Delay(120000);
+                LoadAsyncData();
             }
 
-            else
+            if(e.PropertyName == "IsFaulted")
             {
-                return;
+                RaiseErrorOccured(AllCoinsTask.ErrorMessage);
+
+                await Task.Delay(120000);
+                LoadAsyncData();
             }
+
+            return;
         }
 
         private ICoinMarketCapService _coinMarketCapService;

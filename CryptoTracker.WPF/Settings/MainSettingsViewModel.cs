@@ -14,7 +14,7 @@ namespace CryptoTracker.WPF.Settings
             throw new NotImplementedException();
         }
 
-        public override void LoadData()
+        public override void LoadAsyncData()
         {
             throw new NotImplementedException();
         }

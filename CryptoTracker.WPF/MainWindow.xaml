@@ -139,7 +139,7 @@
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <Button x:Name="minimizeBtn" fa:Awesome.Content="WindowMinimize" Width="25" Click="minimizeBtn_Click"/>
-                        <Button x:Name="maximizeBtn" fa:Awesome.Content="WindowMaximize" Width="25"/>
+                        <Button x:Name="maximizeBtn" fa:Awesome.Content="WindowMaximize" Width="25" Click="maximizeBtn_Click" Height="28" VerticalAlignment="Bottom"/>
                         <Button x:Name="closeBtn" fa:Awesome.Content="WindowClose" Width="25" Click="closeBtn_Click"/>
                     </StackPanel>
 
@@ -164,7 +164,7 @@
                 <Button CommandParameter="all" Style="{StaticResource GridButton}" Command="{Binding NavigateCommand}" />
                 <Button CommandParameter="track" Style="{StaticResource TrackButton}" Command="{Binding NavigateCommand}" >
                 </Button>
-                <Button Content="Settings" Command="{Binding NavigateCommand}" CommandParameter="settings"/>
+                <!--<Button Content="Settings" Command="{Binding NavigateCommand}" CommandParameter="settings"/>-->
 
 
             </StackPanel>

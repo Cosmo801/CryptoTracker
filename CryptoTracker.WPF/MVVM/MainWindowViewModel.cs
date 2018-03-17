@@ -22,7 +22,7 @@ namespace CryptoTracker.WPF.MVVM
 
         public MainWindowViewModel()
         {
-            LoadData();
+            LoadAsyncData();
             InitializeCommands();
 
             _cryptoListViewModel.ErrorOccured += ViewModelErrorOccured;
@@ -38,7 +38,7 @@ namespace CryptoTracker.WPF.MVVM
 
         }
 
-        public override void LoadData()
+        public override void LoadAsyncData()
         {
             _errorViewModel = ContainerHelper.Container.Resolve<ErrorViewModel>();
             _trackerPopupViewModel = ContainerHelper.Container.Resolve<TrackerPopupViewModel>();
@@ -95,7 +95,7 @@ namespace CryptoTracker.WPF.MVVM
         private void OnGetCoin(object sender, Markets.Data.GetCoinEventArgs args)
         {
             _cryptoViewModel.SelectedCoinString = args.CoinName;
-            _cryptoViewModel.LoadData();
+            _cryptoViewModel.LoadAsyncData();
 
             OnNavigate("single");
         }

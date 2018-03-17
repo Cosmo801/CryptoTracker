@@ -21,22 +21,26 @@ namespace CryptoTracker.WPF.Markets
             
         }
 
-        public override void LoadData()
+        public override void LoadAsyncData()
         {
-            try
-            {
-                if (SelectedCoinString == null) return;
-                GetCryptoTask = new TaskWatcher<AdvancedCryptoModel>(_cryptoCompareService.GetCrypto(SelectedCoinString));
+            
+           if (SelectedCoinString == null) return;
+           GetCryptoTask = new TaskWatcher<AdvancedCryptoModel>(_cryptoCompareService.GetCrypto(SelectedCoinString));
 
-                GetCryptoTask.PropertyChanged += GetCryptoCommand_PropertyChanged;
-            }
-            catch (CryptoServiceException ex)
-            {
-                RaiseErrorOccured(ex.Message);
-            }
-
+           GetCryptoTask.PropertyChanged += GetCryptoCommand_PropertyChanged;
 
         }
+
+
+        private void GetCryptoCommand_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Result") SelectedCrypto = GetCryptoTask.Result;
+            if (e.PropertyName == "IsFaulted") RaiseErrorOccured(GetCryptoTask.ErrorMessage);
+
+            return;
+
+        }
+
 
         public TaskWatcher<AdvancedCryptoModel> GetCryptoTask { get; private set; }
 
@@ -70,27 +74,5 @@ namespace CryptoTracker.WPF.Markets
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        private void GetCryptoCommand_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName != "Result") return;
-            SelectedCrypto = GetCryptoTask.Result;
-        }
     }
 }

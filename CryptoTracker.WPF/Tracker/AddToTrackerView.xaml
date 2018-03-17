@@ -132,7 +132,7 @@
                             <ListBox SelectedItem="{Binding SelectedFilter}" ItemsSource="{Binding FilterStrings, Mode=OneWay}"/>
                         </Border>
                         <Grid Grid.Row="1">
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                            <StackPanel>
                                 <Button Content="Remove" Command="{Binding RemoveFilterCommand}"/>
                                 <Button Content="Apply" Command="{Binding AddCryptoToTrackerCommand}"/>
                             </StackPanel>

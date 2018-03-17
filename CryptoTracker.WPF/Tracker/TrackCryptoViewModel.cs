@@ -28,7 +28,6 @@ namespace CryptoTracker.WPF.Tracker
             EditTrackerOpen = false;
 
             EditTrackerViewModel.AppliedToTracker += EditTrackerViewModel_AppliedToTracker;
-            //EditTrackerViewModel.AppliedToTracker += EditTrackerViewModel_AppliedToTracker;
 
             _trackerPriceService.ConditionMet += TrackerConditionMet;
             _trackerPriceService.TaskComplete += TrackerDataUpdated;
@@ -36,7 +35,7 @@ namespace CryptoTracker.WPF.Tracker
             _trackerPriceService.StartTracker();
 
             InitializeCommands();
-            LoadData();
+            LoadAsyncData();
 
         }
 
@@ -44,7 +43,7 @@ namespace CryptoTracker.WPF.Tracker
 
         private void TrackerDataUpdated(object arg1, EventArgs arg2)
         {
-            LoadData();
+            LoadAsyncData();
         }
 
         private void TrackerConditionMet(object arg1, ConditionMetEventArgs arg2)
@@ -60,42 +59,28 @@ namespace CryptoTracker.WPF.Tracker
             CloseEditTrackerCommand = new RelayCommand(OnCloseEditTracker);
         }
 
-        public async override void LoadData()
+        public async override void LoadAsyncData()
         {
-            try
-            {
-                LoadCryptoTask = new TaskWatcher<List<CryptoDataModel>>(_trackerPriceService.GetTrackedCrypto());
+            
+            LoadCryptoTask = new TaskWatcher<List<CryptoDataModel>>(_trackerPriceService.GetTrackedCrypto());
    
-                LoadCryptoTask.PropertyChanged += LoadCryptoCompleted;
+            LoadCryptoTask.PropertyChanged += LoadCryptoCompleted;
 
-                if (LoadCryptoTask.IsCompleted) LoadCryptoTask.RaisePropertyChanged(this, "Result");
+            if (LoadCryptoTask.IsCompleted) LoadCryptoTask.RaisePropertyChanged(this, "Result");
 
-
-
-
-            }
-            catch (CryptoServiceException ex)
-            {
-                RaiseErrorOccured(ex.Message);
-                await Task.Delay(20000).ConfigureAwait(false);
-                LoadData();
-            }
 
 
 
         }
 
-        private void LoadCryptoCompleted(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private async void LoadCryptoCompleted(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "Result")
-            {
-                CryptoDataList = LoadCryptoTask.Result;
-            }
+            if (e.PropertyName == "Result") CryptoDataList = LoadCryptoTask.Result;
 
-            else
-            {
-                return;
-            }
+            
+
+
+            return;
         }
 
         public TaskWatcher<List<CryptoDataModel>> LoadCryptoTask { get; private set; }
@@ -192,31 +177,51 @@ namespace CryptoTracker.WPF.Tracker
 
         private async void OnRemoveCrypto()
         {
-            var cryptoForRemove = CryptoDataList.Single(c => c.Data.Symbol == SelectedObservableCrypto.Symbol);
-            await _trackerLoader.RemoveCrypto(cryptoForRemove);
-            await _trackerLoader.SaveChanges();
-            ObservableSelectedTracker = null;
+            try
+            {
+                var cryptoForRemove = CryptoDataList.Single(c => c.Data.Symbol == SelectedObservableCrypto.Symbol);
+                await _trackerLoader.RemoveCrypto(cryptoForRemove);
+                await _trackerLoader.SaveChanges();
+                ObservableSelectedTracker = null;
 
-            LoadData();
+            }
+            catch (Exception)
+            {
+
+                RaiseErrorOccured("Remove Crypto failed, file may be corrupted");
+            }
+
+           
+
+            LoadAsyncData();
         }
 
         public RelayCommand RemoveCryptoCommand { get; private set; }
 
         private async void EditTrackerViewModel_AppliedToTracker(object arg1, Data.ApplyToTrackerEventArgs arg2)
         {
-            switch (arg2.IsAdd)
+            try
             {
-                case true:
-                    _trackerLoader.AddCrypto(arg2.Crypto);
-                    await _trackerLoader.SaveChanges();
-                    break;
-                case false:
-                    //
-                    break;
+                switch (arg2.IsAdd)
+                {
+                    case true:
+                        _trackerLoader.AddCrypto(arg2.Crypto);
+                        await _trackerLoader.SaveChanges();
+                        break;
+                    case false:
+                        //
+                        break;
 
 
 
+                }
             }
+            catch (Exception)
+            {
+
+                RaiseErrorOccured("Error adding crypto to tracker, file may be corrupted");
+            }
+           
 
             EditTrackerOpen = false;
 

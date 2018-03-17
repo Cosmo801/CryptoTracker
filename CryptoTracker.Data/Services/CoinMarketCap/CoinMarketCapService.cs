@@ -58,12 +58,12 @@ namespace CryptoTracker.Data.Services.CoinMarketCap
                 return parsedCryptoList;
             }
 
-            catch (JsonSerializationException)
+            catch (JsonSerializationException ex)
             {
                 throw new CryptoServiceException("API returned error");
             }
 
-            catch (Exception)
+            catch (HttpRequestException ex)
             {
                 throw new CryptoServiceException("Download failed, service may be down or you do not have a stable internet connection");
             }

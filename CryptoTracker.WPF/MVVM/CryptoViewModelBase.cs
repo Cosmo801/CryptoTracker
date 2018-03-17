@@ -7,7 +7,7 @@ namespace CryptoTracker.WPF.MVVM
 {
     public abstract class CryptoViewModelBase : INotifyPropertyChanged
     {
-        public abstract void LoadData();
+        public abstract void LoadAsyncData();
         public abstract void InitializeCommands();
 
 

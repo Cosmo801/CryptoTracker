@@ -16,11 +16,11 @@ namespace CryptoTracker.WPF.Markets
         {
             _coinMarketCapService = coinMarketCapService;
 
-            LoadData();
+            LoadAsyncData();
             InitializeCommands();
         }
 
-        public override void LoadData()
+        public override void LoadAsyncData()
         {
             _allCoinRequestService = new CryptoRequestService();
 

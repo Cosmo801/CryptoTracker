@@ -24,7 +24,7 @@ namespace CryptoTracker.WPF.Tracker
 
 
             InitializeCommands();
-            LoadData();
+            LoadAsyncData();
         }
 
         public override void InitializeCommands()
@@ -34,42 +34,23 @@ namespace CryptoTracker.WPF.Tracker
             RemoveFilterCommand = new RelayCommand(OnRemoveFilter, CanRemoveFilter);
         }
 
-        public override void LoadData()
+        public override void LoadAsyncData()
         {
-            try
-            {
-                GetCryptoListTask = new TaskWatcher<List<string>>(_compareService.GetAvailableCrypto());
-                GetCryptoListTask.PropertyChanged += CoinListLoaded;
-            }
-            catch (Exception)
-            {
-
-                RaiseErrorOccured("Crypto list get failed");
-            }
-
-
-
-
+           
+           GetCryptoListTask = new TaskWatcher<List<string>>(_compareService.GetAvailableCrypto());
+           GetCryptoListTask.PropertyChanged += CoinListLoaded;
+            
             FilterDictionary = new Dictionary<string, CryptoRequestParameters>();
             FilterStrings = new ObservableCollection<string>();
         }
 
         private void CoinListLoaded(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "Result")
-            {
+            if (e.PropertyName == "Result") CryptoStringList = new ObservableCollection<string>(GetCryptoListTask.Result.OrderBy(s => s));
 
-                CryptoStringList = new ObservableCollection<string>(GetCryptoListTask.Result);
+            if (e.PropertyName == "IsFaulted") RaiseErrorOccured(GetCryptoListTask.ErrorMessage);
 
-
-
-
-            }
-
-            else
-            {
-                return;
-            }
+            return; 
         }
 
         public TaskWatcher<List<string>> GetCryptoListTask { get; set; }
@@ -204,7 +185,7 @@ namespace CryptoTracker.WPF.Tracker
             FilterDictionary.Remove(SelectedFilter);
             FilterStrings.Remove(SelectedFilter);
 
-            AddCryptoToTrackerCommand.RaiseCanExecuteChanged();
+          
         }
 
         public RelayCommand AddCryptoToTrackerCommand { get; private set; }
@@ -231,13 +212,13 @@ namespace CryptoTracker.WPF.Tracker
 
             AppliedToTracker(this, new ApplyToTrackerEventArgs(cryptoDataModel, true));
 
-            //AppliedToTracker(this, new EventArgs());
+         
 
         }
 
         public RelayCommand RemoveFilterCommand { get; private set; }
         public event Action<object, ApplyToTrackerEventArgs> AppliedToTracker;
-        //public event Action<object, EventArgs> AppliedToTracker;
+      
 
         public BasicCryptoModel SelectedCrypto
         {
