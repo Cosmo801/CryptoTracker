@@ -1,6 +1,8 @@
 # CryptoTracker
 
-WPF MVVM Application. This project is currently in a useable stage.
+WPF MVVM Application.
+
+You can download this application here https://www.dropbox.com/s/57hsiyescnzm5fh/CryptoTracker.zip?dl=0. Please note it is currently in a buggy unfinished state (but is useable). Run setup.exe.
 
 This application download cryptocurrency data and displays it to the users in datagrids. The user can choose to 'track' a cryptocurrency which is added to a file. When certain parameters that the users selects such as price > $100 the user is notified.
 
